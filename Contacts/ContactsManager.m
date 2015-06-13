@@ -8,6 +8,7 @@
 
 #import "ContactsManager.h"
 #import "Contact.h"
+#import "ContactsSection.h"
 #import <AddressBook/AddressBook.h>
 
 @implementation ContactsManager
@@ -23,14 +24,34 @@
 
 - (NSArray *)loadContacts:(ABAddressBookRef)ab {
     NSArray *entries = (__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(ab);
-    NSMutableArray *unsortedContacts = [NSMutableArray array];
+    NSMutableDictionary *unsortedSections = [NSMutableDictionary dictionary];
     for (id entry in entries) {
-        [unsortedContacts addObject:[[Contact alloc] initWithRecord:(__bridge ABRecordRef)entry]];
+        Contact *contact = [[Contact alloc] initWithRecord:(__bridge ABRecordRef)entry];
+        NSString *key = contact.yearAndMonthCreated;
+        NSMutableArray *arr = unsortedSections[key];
+        if (!arr)
+            unsortedSections[key] = [NSMutableArray arrayWithObject:contact];
+        else
+            [arr addObject:contact];
     }
     
-    return [unsortedContacts sortedArrayUsingComparator:^NSComparisonResult(Contact *obj1, Contact *obj2) {
-        return [obj2.created compare:obj1.created];
+    NSArray *sortedKeys = [[unsortedSections allKeys] sortedArrayUsingComparator:^NSComparisonResult(NSString *key1, NSString *key2) {
+        return [key2 compare:key1];
     }];
+    
+    NSMutableArray *sections = [NSMutableArray arrayWithCapacity:sortedKeys.count];
+    for (NSString *key in sortedKeys) {
+        NSArray *sorted = [unsortedSections[key] sortedArrayUsingComparator:^NSComparisonResult(Contact *obj1, Contact *obj2) {
+            return [obj2.created compare:obj1.created];
+        }];
+        
+        Contact *contact = sorted[0];
+        ContactsSection *section = [[ContactsSection alloc] initWithTitle:contact.monthAndYearCreated
+                                                              andContacts:sorted];
+        [sections addObject:section];
+    }
+    
+    return sections;
 }
 
 - (void)authorizeAndLoadContacts:(void(^)(BOOL, NSArray *))completionHandler {
@@ -42,13 +63,12 @@
             if (!strongSelf)
                 return;
         
-            NSArray *arr = granted? [strongSelf loadContacts:ab]: nil;
+            NSArray *arr = granted? [self loadContacts:ab]: nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 completionHandler(granted, arr);
             });
         });
     } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-        [self loadContacts:ab];
         completionHandler(YES, [self loadContacts:ab]);
     }
     else {

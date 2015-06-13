@@ -8,11 +8,12 @@
 
 #import "ViewController.h"
 #import "ContactsManager.h"
+#import "ContactsSection.h"
 #import "Contact.h"
 
 @interface ViewController ()
 
-@property (nonatomic, strong) NSArray *contacts;
+@property (nonatomic, strong) NSArray *sections;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 @end
@@ -26,7 +27,7 @@
     [[ContactsManager sharedInstance] authorizeAndLoadContacts:^(BOOL granted, NSArray *ret) {
         typeof(self) strongSelf = weakSelf;
         if (strongSelf) {
-            strongSelf.contacts = ret;
+            strongSelf.sections = ret;
             [strongSelf.tableView reloadData];
             if ([strongSelf.refreshControl isRefreshing]) {
                 [strongSelf.refreshControl endRefreshing];
@@ -51,18 +52,21 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    Contact *contact = self.contacts[indexPath.row];
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    ContactsSection *section = self.sections[indexPath.section];
+    Contact *contact = section.contacts[indexPath.row];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                                   reuseIdentifier:@"cell"];
     cell.textLabel.attributedText = [contact attributedFullName];
     return cell;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return [self.sections count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.contacts count];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)s {
+    ContactsSection *section = self.sections[s];
+    return [section.contacts count];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -71,6 +75,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 50.0;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)s {
+    ContactsSection *section = self.sections[s];
+    return section.title;
 }
 
 @end

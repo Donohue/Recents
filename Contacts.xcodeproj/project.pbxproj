@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A820D34D1B2CC9E00026626A /* ContactsSection.m in Sources */ = {isa = PBXBuildFile; fileRef = A820D34C1B2CC9E00026626A /* ContactsSection.m */; };
 		A83EFEFB1B2CA83C005261F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A83EFEFA1B2CA83C005261F3 /* main.m */; };
 		A83EFEFE1B2CA83C005261F3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A83EFEFD1B2CA83C005261F3 /* AppDelegate.m */; };
 		A83EFF011B2CA83C005261F3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A83EFF001B2CA83C005261F3 /* ViewController.m */; };
@@ -29,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A820D34B1B2CC9E00026626A /* ContactsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsSection.h; sourceTree = "<group>"; };
+		A820D34C1B2CC9E00026626A /* ContactsSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsSection.m; sourceTree = "<group>"; };
 		A83EFEF51B2CA83C005261F3 /* Contacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Contacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A83EFEF91B2CA83C005261F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A83EFEFA1B2CA83C005261F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -91,6 +94,8 @@
 				A83EFEFD1B2CA83C005261F3 /* AppDelegate.m */,
 				A83EFEFF1B2CA83C005261F3 /* ViewController.h */,
 				A83EFF001B2CA83C005261F3 /* ViewController.m */,
+				A820D34B1B2CC9E00026626A /* ContactsSection.h */,
+				A820D34C1B2CC9E00026626A /* ContactsSection.m */,
 				A83EFF211B2CAF48005261F3 /* ContactsManager.h */,
 				A83EFF221B2CAF48005261F3 /* ContactsManager.m */,
 				A83EFF1E1B2CA954005261F3 /* Contact.h */,
@@ -230,6 +235,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A83EFF201B2CA954005261F3 /* Contact.m in Sources */,
+				A820D34D1B2CC9E00026626A /* ContactsSection.m in Sources */,
 				A83EFF011B2CA83C005261F3 /* ViewController.m in Sources */,
 				A83EFEFE1B2CA83C005261F3 /* AppDelegate.m in Sources */,
 				A83EFEFB1B2CA83C005261F3 /* main.m in Sources */,
@@ -428,6 +434,7 @@
 				A83EFF1A1B2CA83C005261F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A83EFF1B1B2CA83C005261F3 /* Build configuration list for PBXNativeTarget "ContactsTests" */ = {
 			isa = XCConfigurationList;
@@ -436,6 +443,7 @@
 				A83EFF1D1B2CA83C005261F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

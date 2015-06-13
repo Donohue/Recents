@@ -16,6 +16,9 @@
 @property (nonatomic, strong) NSDate *created;
 
 -(id)initWithRecord:(ABRecordRef)ref;
+- (NSString *)fullName;
 - (NSAttributedString *)attributedFullName;
+- (NSString *)monthAndYearCreated;
+- (NSString *)yearAndMonthCreated;
 
 @end

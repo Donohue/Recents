@@ -21,13 +21,29 @@
     return self;
 }
 
+- (NSString *)monthAndYearCreated {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+    [dateFormatter setDateFormat:@"MMM yyyy"];
+    return [dateFormatter stringFromDate:self.created];
+}
+
+- (NSString *)yearAndMonthCreated {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+    [dateFormatter setDateFormat:@"yyyy-MM"];
+    return [dateFormatter stringFromDate:self.created];
+}
+
 - (NSString *)fullName {
     if ([self.firstName length] && [self.lastName length])
         return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
     else if ([self.firstName length])
         return self.firstName;
-    else
+    else if (self.lastName)
         return self.lastName;
+    else
+        return @"";
 }
 
 - (NSAttributedString *)attributedFullName {
