@@ -14,7 +14,7 @@
     self = [super init];
     if (self) {
         self.title = title;
-        self.contacts = contacts;
+        self.contacts = [NSMutableArray arrayWithArray:contacts];
     }
     return self;
 }

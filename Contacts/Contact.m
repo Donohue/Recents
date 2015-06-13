@@ -17,8 +17,13 @@
         self.firstName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonFirstNameProperty);
         self.lastName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonLastNameProperty);
         self.created = (__bridge NSDate *)ABRecordCopyValue(ref, kABPersonCreationDateProperty);
+        self.record = (__bridge id)ref;
     }
     return self;
+}
+
+- (ABRecordRef)addressBookReference {
+    return (__bridge ABRecordRef)self.record;
 }
 
 - (NSString *)monthAndYearCreated {

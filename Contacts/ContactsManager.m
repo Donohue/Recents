@@ -7,7 +7,6 @@
 //
 
 #import "ContactsManager.h"
-#import "Contact.h"
 #import "ContactsSection.h"
 #import <AddressBook/AddressBook.h>
 
@@ -74,6 +73,13 @@
     else {
         completionHandler(NO, nil);
     }
+}
+
+- (void)deleteContact:(Contact *)contact {
+    CFErrorRef error = NULL;
+    ABAddressBookRef ab = ABAddressBookCreateWithOptions(NULL, NULL);
+    BOOL success = ABAddressBookRemoveRecord(ab, contact.addressBookReference, &error);
+    NSLog(@"SUCCESS: %d %@", success, error);
 }
 
 @end

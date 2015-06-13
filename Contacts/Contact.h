@@ -14,11 +14,13 @@
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSDate *created;
+@property (nonatomic, strong) id record;
 
 -(id)initWithRecord:(ABRecordRef)ref;
 - (NSString *)fullName;
 - (NSAttributedString *)attributedFullName;
 - (NSString *)monthAndYearCreated;
 - (NSString *)yearAndMonthCreated;
+- (ABRecordRef)addressBookReference;
 
 @end

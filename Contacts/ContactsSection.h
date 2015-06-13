@@ -11,7 +11,7 @@
 @interface ContactsSection : NSObject
 
 @property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSArray *contacts;
+@property (nonatomic, strong) NSMutableArray *contacts;
 
 - (id)initWithTitle:(NSString *)title andContacts:(NSArray *)contacts;
 

@@ -7,10 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Contact.h"
 
 @interface ContactsManager : NSObject
 
 + (id)sharedInstance;
 - (void)authorizeAndLoadContacts:(void(^)(BOOL, NSArray *))completionHandler;
+- (void)deleteContact:(Contact *)contact;
 
 @end
