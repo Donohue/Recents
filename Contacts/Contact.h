@@ -11,6 +11,7 @@
 
 @interface Contact : NSObject
 
+@property (nonatomic, strong) NSString *compositeName;
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSDate *created;

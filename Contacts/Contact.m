@@ -14,6 +14,7 @@
 -(id)initWithRecord:(ABRecordRef)ref {
     self = [super init];
     if (self) {
+        self.compositeName = (__bridge NSString *)ABRecordCopyCompositeName(ref);
         self.firstName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonFirstNameProperty);
         self.lastName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonLastNameProperty);
         self.created = (__bridge NSDate *)ABRecordCopyValue(ref, kABPersonCreationDateProperty);
@@ -41,14 +42,7 @@
 }
 
 - (NSString *)fullName {
-    if ([self.firstName length] && [self.lastName length])
-        return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
-    else if ([self.firstName length])
-        return self.firstName;
-    else if (self.lastName)
-        return self.lastName;
-    else
-        return @"";
+    return [self.compositeName length]? self.compositeName: @"";
 }
 
 - (NSAttributedString *)attributedFullName {
