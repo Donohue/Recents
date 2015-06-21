@@ -94,10 +94,25 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         Contact *contact = [self contactAtIndexPath:indexPath];
-        ContactsSection *section = self.sections[indexPath.section];
-        [section.contacts removeObjectAtIndex:indexPath.row];
-        [[ContactsManager sharedInstance] deleteContact:contact];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", nil)
+                                                          style:UIAlertActionStyleDestructive
+                                                        handler:^(UIAlertAction *action) {
+                                                            ContactsSection *section = self.sections[indexPath.section];
+                                                            [section.contacts removeObjectAtIndex:indexPath.row];
+                                                            [[ContactsManager sharedInstance] deleteContact:contact];
+                                                            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                                                        }];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"No", nil)
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:^(UIAlertAction *action) {
+                                                       }];
+        NSString *message = [NSString stringWithFormat:@"Are you sure you want to delete %@ from your contacts?", contact.fullName];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Contact", nil)
+                                                                                 message:message
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:confirm];
+        [alertController addAction:cancel];
+        [self presentViewController:alertController animated:YES completion:nil];
     }
 }
 
