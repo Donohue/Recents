@@ -75,11 +75,13 @@
     }
 }
 
-- (void)deleteContact:(Contact *)contact {
-    CFErrorRef error = NULL;
+- (BOOL)deleteContact:(Contact *)contact {
     ABAddressBookRef ab = ABAddressBookCreateWithOptions(NULL, NULL);
-    BOOL success = ABAddressBookRemoveRecord(ab, contact.addressBookReference, &error);
-    NSLog(@"SUCCESS: %d %@", success, error);
+    BOOL success = ABAddressBookRemoveRecord(ab, contact.addressBookReference, NULL);
+    if (success) {
+        success = ABAddressBookSave(ab, NULL);
+    }
+    return success;
 }
 
 @end

@@ -13,6 +13,6 @@
 
 + (id)sharedInstance;
 - (void)authorizeAndLoadContacts:(void(^)(BOOL, NSArray *))completionHandler;
-- (void)deleteContact:(Contact *)contact;
+- (BOOL)deleteContact:(Contact *)contact;
 
 @end
