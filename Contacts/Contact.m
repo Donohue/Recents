@@ -18,6 +18,8 @@
         self.firstName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonFirstNameProperty);
         self.lastName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonLastNameProperty);
         self.created = (__bridge NSDate *)ABRecordCopyValue(ref, kABPersonCreationDateProperty);
+        self.emailAddress = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonEmailProperty);
+        self.phoneNumber = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonPhoneProperty);
         self.record = (__bridge id)ref;
     }
     return self;

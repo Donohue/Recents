@@ -15,6 +15,8 @@
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSDate *created;
+@property (nonatomic, strong) NSString *phoneNumber;
+@property (nonatomic, strong) NSString *emailAddress;
 @property (nonatomic, strong) id record;
 
 -(id)initWithRecord:(ABRecordRef)ref;
