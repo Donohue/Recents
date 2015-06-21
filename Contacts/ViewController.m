@@ -10,6 +10,7 @@
 #import "ContactsManager.h"
 #import "ContactsSection.h"
 #import "Contact.h"
+@import MessageUI;
 
 @interface ViewController ()
 
@@ -51,9 +52,13 @@
 
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (Contact *)contactAtIndexPath:(NSIndexPath *)indexPath {
     ContactsSection *section = self.sections[indexPath.section];
-    Contact *contact = section.contacts[indexPath.row];
+    return section.contacts[indexPath.row];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    Contact *contact = [self contactAtIndexPath:indexPath];
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
                                                    reuseIdentifier:@"cell"];
     cell.textLabel.attributedText = [contact attributedFullName];
@@ -88,9 +93,10 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        Contact *contact = [self contactAtIndexPath:indexPath];
         ContactsSection *section = self.sections[indexPath.section];
         [section.contacts removeObjectAtIndex:indexPath.row];
-        [[ContactsManager sharedInstance] deleteContact:section.contacts[indexPath.row]];
+        [[ContactsManager sharedInstance] deleteContact:contact];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
