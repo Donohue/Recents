@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import "ContactTableViewCell.h"
+#import "ContactAccessoryView.h"
 #import "ContactsManager.h"
 #import "ContactsSection.h"
 #import "Contact.h"
@@ -59,9 +61,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     Contact *contact = [self contactAtIndexPath:indexPath];
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                                   reuseIdentifier:@"cell"];
+    ContactTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.textLabel.attributedText = [contact attributedFullName];
+    cell.contactAccessoryView.phoneBlock = ^{
+        NSString *URLstr = [NSString stringWithFormat:@"tel:%@", contact.phoneNumber];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLstr]];
+    };
+    cell.contactAccessoryView.messageBlock = ^{
+        NSString *URLstr = [NSString stringWithFormat:@"sms:%@", contact.phoneNumber];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLstr]];
+    };
     return cell;
 }
 
@@ -104,8 +113,7 @@
                                                         }];
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"No", nil)
                                                          style:UIAlertActionStyleCancel
-                                                       handler:^(UIAlertAction *action) {
-                                                       }];
+                                                       handler:^(UIAlertAction *action) {}];
         NSString *message = [NSString stringWithFormat:@"Are you sure you want to delete %@ from your contacts?", contact.fullName];
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Delete Contact", nil)
                                                                                  message:message
