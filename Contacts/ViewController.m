@@ -100,14 +100,19 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        __weak typeof(self) weakSelf = self;
         Contact *contact = [self contactAtIndexPath:indexPath];
         UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"Yes", nil)
                                                           style:UIAlertActionStyleDestructive
                                                         handler:^(UIAlertAction *action) {
-                                                            ContactsSection *section = self.sections[indexPath.section];
+                                                            typeof(self) strongSelf = weakSelf;
+                                                            if (!strongSelf)
+                                                                return;
+                                                            
+                                                            ContactsSection *section = strongSelf.sections[indexPath.section];
                                                             [section.contacts removeObjectAtIndex:indexPath.row];
                                                             [[ContactsManager sharedInstance] deleteContact:contact];
-                                                            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                                                            [strongSelf.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                                                         }];
         UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"No", nil)
                                                          style:UIAlertActionStyleCancel
