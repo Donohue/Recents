@@ -42,7 +42,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.title = NSLocalizedString(@"Contacts", nil);
+    self.navigationItem.title = NSLocalizedString(@"Recents", nil);
     self.tableView.tableFooterView = [[UIView alloc] init];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
