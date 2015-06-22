@@ -22,7 +22,7 @@
 }
 
 - (NSArray *)loadContacts:(ABAddressBookRef)ab {
-    NSArray *entries = (__bridge NSArray *)ABAddressBookCopyArrayOfAllPeople(ab);
+    NSArray *entries = (__bridge_transfer NSArray *)ABAddressBookCopyArrayOfAllPeople(ab);
     NSMutableDictionary *unsortedSections = [NSMutableDictionary dictionary];
     for (id entry in entries) {
         Contact *contact = [[Contact alloc] initWithRecord:(__bridge ABRecordRef)entry];

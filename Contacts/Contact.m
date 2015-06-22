@@ -13,7 +13,7 @@
 @implementation Contact
 
 - (NSArray *)phoneNumbersWithRecord:(ABRecordRef)ref {
-    ABMultiValueRef phoneNumbers = ABRecordCopyValue(ref, kABPersonPhoneProperty);
+    ABMultiValueRef phoneNumbers =  ABRecordCopyValue(ref, kABPersonPhoneProperty);
     NSMutableArray *numbers = [[NSMutableArray alloc] initWithCapacity:ABMultiValueGetCount(phoneNumbers)];
     for (CFIndex i = 0; i < ABMultiValueGetCount(phoneNumbers); i++) {
         NSString *number = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, i);
@@ -29,19 +29,20 @@
         phoneNumber.label = locLabel;
         [numbers addObject:phoneNumber];
     }
+    CFRelease(phoneNumbers);
     return numbers;
 }
 
 -(id)initWithRecord:(ABRecordRef)ref {
     self = [super init];
     if (self) {
-        self.compositeName = (__bridge NSString *)ABRecordCopyCompositeName(ref);
-        self.firstName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonFirstNameProperty);
-        self.lastName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonLastNameProperty);
-        self.created = (__bridge NSDate *)ABRecordCopyValue(ref, kABPersonCreationDateProperty);
-        self.emailAddress = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonEmailProperty);
+        self.compositeName = (__bridge_transfer NSString *)ABRecordCopyCompositeName(ref);
+        self.firstName = (__bridge_transfer NSString *)ABRecordCopyValue(ref, kABPersonFirstNameProperty);
+        self.lastName = (__bridge_transfer NSString *)ABRecordCopyValue(ref, kABPersonLastNameProperty);
+        self.created = (__bridge_transfer NSDate *)ABRecordCopyValue(ref, kABPersonCreationDateProperty);
+        self.emailAddress = (__bridge_transfer NSString *)ABRecordCopyValue(ref, kABPersonEmailProperty);
         self.phoneNumbers = [self phoneNumbersWithRecord:ref];
-        self.record = (__bridge id)ref;
+        self.record = (__bridge_transfer id)ref;
     }
     return self;
 }
