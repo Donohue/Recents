@@ -24,7 +24,7 @@
 /* Begin PBXFileReference section */
 		A820D34B1B2CC9E00026626A /* ContactsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactsSection.h; sourceTree = "<group>"; };
 		A820D34C1B2CC9E00026626A /* ContactsSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsSection.m; sourceTree = "<group>"; };
-		A83EFEF51B2CA83C005261F3 /* Contacts.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Contacts.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A83EFEF51B2CA83C005261F3 /* Recents.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Recents.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A83EFEF91B2CA83C005261F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A83EFEFA1B2CA83C005261F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A83EFEFC1B2CA83C005261F3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 		A83EFEF61B2CA83C005261F3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A83EFEF51B2CA83C005261F3 /* Contacts.app */,
+				A83EFEF51B2CA83C005261F3 /* Recents.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -126,7 +126,7 @@
 			);
 			name = Recents;
 			productName = Contacts;
-			productReference = A83EFEF51B2CA83C005261F3 /* Contacts.app */;
+			productReference = A83EFEF51B2CA83C005261F3 /* Recents.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
