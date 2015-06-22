@@ -16,6 +16,7 @@
 - (void)awakeFromNib {
     self.contactAccessoryView = [[ContactAccessoryView alloc] init];
     self.accessoryView = self.contactAccessoryView;
+    self.editingAccessoryView = self.contactAccessoryView;
     self.selectionStyle = UITableViewCellSelectionStyleBlue;
 }
 
