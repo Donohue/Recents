@@ -30,14 +30,16 @@
     __weak typeof(self) weakSelf = self;
     [[ContactsManager sharedInstance] authorizeAndLoadContacts:^(BOOL granted, NSArray *ret) {
         typeof(self) strongSelf = weakSelf;
-        if (strongSelf) {
-            strongSelf.sections = ret;
-            [strongSelf.tableView reloadData];
-            strongSelf.tableView.tableFooterView = [[UIView alloc] init];
-            strongSelf.tableView.scrollEnabled = YES;
-            if ([strongSelf.refreshControl isRefreshing]) {
-                [strongSelf.refreshControl endRefreshing];
-            }
+        if (!strongSelf) {
+            return;
+        }
+        
+        strongSelf.sections = ret;
+        [strongSelf.tableView reloadData];
+        strongSelf.tableView.tableFooterView = [[UIView alloc] init];
+        strongSelf.tableView.scrollEnabled = YES;
+        if ([strongSelf.refreshControl isRefreshing]) {
+            [strongSelf.refreshControl endRefreshing];
         }
     }];
 }
