@@ -80,22 +80,10 @@
 				A83EFEFD1B2CA83C005261F3 /* AppDelegate.m */,
 				A83EFEFF1B2CA83C005261F3 /* ViewController.h */,
 				A83EFF001B2CA83C005261F3 /* ViewController.m */,
-				A874A3231B377E6A0070DEE5 /* ContactAccessoryView.h */,
-				A874A3241B377E6A0070DEE5 /* ContactAccessoryView.m */,
-				A820D34B1B2CC9E00026626A /* ContactsSection.h */,
-				A820D34C1B2CC9E00026626A /* ContactsSection.m */,
-				A83EFF211B2CAF48005261F3 /* ContactsManager.h */,
-				A83EFF221B2CAF48005261F3 /* ContactsManager.m */,
-				A83EFF1E1B2CA954005261F3 /* Contact.h */,
-				A83EFF1F1B2CA954005261F3 /* Contact.m */,
-				A874A3291B378BDB0070DEE5 /* PhoneNumber.h */,
-				A874A32A1B378BDB0070DEE5 /* PhoneNumber.m */,
-				A83EFF021B2CA83C005261F3 /* Main.storyboard */,
-				A83EFF051B2CA83C005261F3 /* Images.xcassets */,
-				A83EFF071B2CA83C005261F3 /* LaunchScreen.xib */,
+				A868974C1B38CE80008B4778 /* Views */,
+				A868974D1B38CE9F008B4778 /* Models */,
+				A868974E1B38CEB7008B4778 /* Resources */,
 				A83EFEF81B2CA83C005261F3 /* Supporting Files */,
-				A874A3261B3781240070DEE5 /* ContactTableViewCell.h */,
-				A874A3271B3781240070DEE5 /* ContactTableViewCell.m */,
 			);
 			path = Contacts;
 			sourceTree = "<group>";
@@ -107,6 +95,42 @@
 				A83EFEFA1B2CA83C005261F3 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A868974C1B38CE80008B4778 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A874A3261B3781240070DEE5 /* ContactTableViewCell.h */,
+				A874A3271B3781240070DEE5 /* ContactTableViewCell.m */,
+				A874A3231B377E6A0070DEE5 /* ContactAccessoryView.h */,
+				A874A3241B377E6A0070DEE5 /* ContactAccessoryView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		A868974D1B38CE9F008B4778 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A820D34B1B2CC9E00026626A /* ContactsSection.h */,
+				A820D34C1B2CC9E00026626A /* ContactsSection.m */,
+				A83EFF211B2CAF48005261F3 /* ContactsManager.h */,
+				A83EFF221B2CAF48005261F3 /* ContactsManager.m */,
+				A83EFF1E1B2CA954005261F3 /* Contact.h */,
+				A83EFF1F1B2CA954005261F3 /* Contact.m */,
+				A874A3291B378BDB0070DEE5 /* PhoneNumber.h */,
+				A874A32A1B378BDB0070DEE5 /* PhoneNumber.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		A868974E1B38CEB7008B4778 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A83EFF021B2CA83C005261F3 /* Main.storyboard */,
+				A83EFF051B2CA83C005261F3 /* Images.xcassets */,
+				A83EFF071B2CA83C005261F3 /* LaunchScreen.xib */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
