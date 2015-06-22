@@ -71,7 +71,17 @@
             });
         });
     } else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
-        completionHandler(YES, [self loadContacts:ab]);
+        __weak typeof(self) weakSelf = self;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            typeof(self) strongSelf = weakSelf;
+            if (!strongSelf)
+                return;
+            
+            NSArray *arr = [strongSelf loadContacts:ab];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completionHandler(YES, arr);
+            });
+        });
     }
     else {
         completionHandler(NO, nil);
