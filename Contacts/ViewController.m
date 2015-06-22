@@ -69,7 +69,20 @@
     ContactTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.textLabel.attributedText = [contact attributedFullName];
     cell.contactAccessoryView.phoneBlock = ^{
-        [[UIApplication sharedApplication] openURL:[contact.phoneNumbers[0] phoneURL]];
+        UIAlertAction *confirm = [UIAlertAction actionWithTitle:NSLocalizedString(@"Call", nil)
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction *action) {
+                                                            [[UIApplication sharedApplication] openURL:[contact.phoneNumbers[0] phoneURL]];
+                                                        }];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", nil)
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:^(UIAlertAction *action){}];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[contact.phoneNumbers[0] number]
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:cancel];
+        [alertController addAction:confirm];
+        [self presentViewController:alertController animated:YES completion:NULL];
     };
     cell.contactAccessoryView.messageBlock = ^{
         [[UIApplication sharedApplication] openURL:[contact.phoneNumbers[0] smsURL]];
