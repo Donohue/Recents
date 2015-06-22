@@ -7,9 +7,30 @@
 //
 
 #import "Contact.h"
+#import "PhoneNumber.h"
 @import UIKit;
 
 @implementation Contact
+
+- (NSArray *)phoneNumbersWithRecord:(ABRecordRef)ref {
+    ABMultiValueRef phoneNumbers = ABRecordCopyValue(ref, kABPersonPhoneProperty);
+    NSMutableArray *numbers = [[NSMutableArray alloc] initWithCapacity:ABMultiValueGetCount(phoneNumbers)];
+    for (CFIndex i = 0; i < ABMultiValueGetCount(phoneNumbers); i++) {
+        NSString *number = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, i);
+        CFStringRef label = ABMultiValueCopyLabelAtIndex(phoneNumbers, i);
+        NSString *locLabel = nil;
+        if (label) {
+            locLabel = (__bridge_transfer NSString *)ABAddressBookCopyLocalizedLabel(label);
+            CFRelease(label);
+        }
+        
+        PhoneNumber *phoneNumber = [[PhoneNumber alloc] init];
+        phoneNumber.number = number;
+        phoneNumber.label = locLabel;
+        [numbers addObject:phoneNumber];
+    }
+    return numbers;
+}
 
 -(id)initWithRecord:(ABRecordRef)ref {
     self = [super init];
@@ -19,7 +40,7 @@
         self.lastName = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonLastNameProperty);
         self.created = (__bridge NSDate *)ABRecordCopyValue(ref, kABPersonCreationDateProperty);
         self.emailAddress = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonEmailProperty);
-        self.phoneNumber = (__bridge NSString *)ABRecordCopyValue(ref, kABPersonPhoneProperty);
+        self.phoneNumbers = [self phoneNumbersWithRecord:ref];
         self.record = (__bridge id)ref;
     }
     return self;

@@ -26,6 +26,9 @@
     NSMutableDictionary *unsortedSections = [NSMutableDictionary dictionary];
     for (id entry in entries) {
         Contact *contact = [[Contact alloc] initWithRecord:(__bridge ABRecordRef)entry];
+        if ([contact.phoneNumbers count] == 0)
+            continue;
+        
         NSString *key = contact.yearAndMonthCreated;
         NSMutableArray *arr = unsortedSections[key];
         if (!arr)

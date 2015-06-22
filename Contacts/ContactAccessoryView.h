@@ -18,8 +18,8 @@
 
 @interface ContactAccessoryView : UIView
 
-@property (nonatomic, weak) UIButton *phoneButton;
-@property (nonatomic, weak) UIButton *messageButton;
+@property (nonatomic, strong) UIButton *phoneButton;
+@property (nonatomic, strong) UIButton *messageButton;
 @property (nonatomic, strong) void (^phoneBlock)();
 @property (nonatomic, strong) void (^messageBlock)();
 

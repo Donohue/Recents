@@ -64,12 +64,10 @@
     ContactTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.textLabel.attributedText = [contact attributedFullName];
     cell.contactAccessoryView.phoneBlock = ^{
-        NSString *URLstr = [NSString stringWithFormat:@"tel:%@", contact.phoneNumber];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLstr]];
+        [[UIApplication sharedApplication] openURL:[contact.phoneNumbers[0] phoneURL]];
     };
     cell.contactAccessoryView.messageBlock = ^{
-        NSString *URLstr = [NSString stringWithFormat:@"sms:%@", contact.phoneNumber];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:URLstr]];
+        [[UIApplication sharedApplication] openURL:[contact.phoneNumbers[0] smsURL]];
     };
     return cell;
 }

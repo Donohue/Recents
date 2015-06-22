@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
+#import "PhoneNumber.h"
 
 @interface Contact : NSObject
 
@@ -15,7 +16,7 @@
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSDate *created;
-@property (nonatomic, strong) NSString *phoneNumber;
+@property (nonatomic, strong) NSArray *phoneNumbers;
 @property (nonatomic, strong) NSString *emailAddress;
 @property (nonatomic, strong) id record;
 
