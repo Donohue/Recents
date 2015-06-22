@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "SpinnerView.h"
 #import "ContactTableViewCell.h"
 #import "ContactAccessoryView.h"
 #import "ContactsManager.h"
@@ -32,18 +33,20 @@
         if (strongSelf) {
             strongSelf.sections = ret;
             [strongSelf.tableView reloadData];
+            strongSelf.tableView.tableFooterView = [[UIView alloc] init];
+            strongSelf.tableView.scrollEnabled = YES;
             if ([strongSelf.refreshControl isRefreshing]) {
                 [strongSelf.refreshControl endRefreshing];
             }
         }
     }];
 }
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.navigationItem.title = NSLocalizedString(@"Recents", nil);
-    self.tableView.tableFooterView = [[UIView alloc] init];
+    self.tableView.tableFooterView = [[SpinnerView alloc] initWithSize:CGSizeMake(self.tableView.frame.size.width, self.tableView.frame.size.height - 64)];
+    self.tableView.scrollEnabled = NO;
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self
