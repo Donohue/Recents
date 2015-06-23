@@ -17,6 +17,7 @@
 		A83EFF201B2CA954005261F3 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = A83EFF1F1B2CA954005261F3 /* Contact.m */; };
 		A83EFF231B2CAF48005261F3 /* ContactsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A83EFF221B2CAF48005261F3 /* ContactsManager.m */; };
 		A86897511B38D064008B4778 /* SpinnerView.m in Sources */ = {isa = PBXBuildFile; fileRef = A86897501B38D064008B4778 /* SpinnerView.m */; };
+		A86897541B38D610008B4778 /* PermissionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = A86897531B38D610008B4778 /* PermissionsView.m */; };
 		A874A3251B377E6A0070DEE5 /* ContactAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = A874A3241B377E6A0070DEE5 /* ContactAccessoryView.m */; };
 		A874A3281B3781240070DEE5 /* ContactTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A874A3271B3781240070DEE5 /* ContactTableViewCell.m */; };
 		A874A32B1B378BDB0070DEE5 /* PhoneNumber.m in Sources */ = {isa = PBXBuildFile; fileRef = A874A32A1B378BDB0070DEE5 /* PhoneNumber.m */; };
@@ -41,6 +42,8 @@
 		A83EFF221B2CAF48005261F3 /* ContactsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactsManager.m; sourceTree = "<group>"; };
 		A868974F1B38D064008B4778 /* SpinnerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpinnerView.h; sourceTree = "<group>"; };
 		A86897501B38D064008B4778 /* SpinnerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpinnerView.m; sourceTree = "<group>"; };
+		A86897521B38D610008B4778 /* PermissionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PermissionsView.h; sourceTree = "<group>"; };
+		A86897531B38D610008B4778 /* PermissionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PermissionsView.m; sourceTree = "<group>"; };
 		A874A3231B377E6A0070DEE5 /* ContactAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactAccessoryView.h; sourceTree = "<group>"; };
 		A874A3241B377E6A0070DEE5 /* ContactAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactAccessoryView.m; sourceTree = "<group>"; };
 		A874A3261B3781240070DEE5 /* ContactTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactTableViewCell.h; sourceTree = "<group>"; };
@@ -109,6 +112,8 @@
 				A874A3241B377E6A0070DEE5 /* ContactAccessoryView.m */,
 				A868974F1B38D064008B4778 /* SpinnerView.h */,
 				A86897501B38D064008B4778 /* SpinnerView.m */,
+				A86897521B38D610008B4778 /* PermissionsView.h */,
+				A86897531B38D610008B4778 /* PermissionsView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -216,6 +221,7 @@
 				A83EFEFE1B2CA83C005261F3 /* AppDelegate.m in Sources */,
 				A83EFEFB1B2CA83C005261F3 /* main.m in Sources */,
 				A874A3251B377E6A0070DEE5 /* ContactAccessoryView.m in Sources */,
+				A86897541B38D610008B4778 /* PermissionsView.m in Sources */,
 				A86897511B38D064008B4778 /* SpinnerView.m in Sources */,
 				A83EFF231B2CAF48005261F3 /* ContactsManager.m in Sources */,
 			);

@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "PermissionsView.h"
 #import "SpinnerView.h"
 #import "ContactTableViewCell.h"
 #import "ContactAccessoryView.h"
@@ -33,10 +34,22 @@
         if (!strongSelf) {
             return;
         }
+        else if (!granted) {
+            strongSelf.sections = nil;
+            [strongSelf.tableView reloadData];
+            PermissionsView *permissionsView = [[PermissionsView alloc] initWithSize:CGSizeMake(self.tableView.frame.size.width, self.tableView.frame.size.height - 64)];
+            permissionsView.permissionsBlock = ^{
+                NSURL *appSettings = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+                [[UIApplication sharedApplication] openURL:appSettings];
+            };
+            strongSelf.tableView.tableFooterView = permissionsView;
+        }
+        else {
+            strongSelf.sections = ret;
+            [strongSelf.tableView reloadData];
+            strongSelf.tableView.tableFooterView = [[UIView alloc] init];
+        }
         
-        strongSelf.sections = ret;
-        [strongSelf.tableView reloadData];
-        strongSelf.tableView.tableFooterView = [[UIView alloc] init];
         strongSelf.tableView.scrollEnabled = YES;
         if ([strongSelf.refreshControl isRefreshing]) {
             [strongSelf.refreshControl endRefreshing];
