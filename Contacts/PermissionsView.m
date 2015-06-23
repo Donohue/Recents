@@ -10,7 +10,7 @@
 
 @implementation PermissionsView
 
-#define kContainerPadding 80
+#define kContainerPadding 50
 #define kButtonTopPadding 25
 
 -(id)initWithSize:(CGSize)size {
@@ -31,14 +31,15 @@
                                                                          options:NSStringDrawingUsesLineFragmentOrigin
                                                             attributes:@{NSFontAttributeName: permissionButtonFont}
                                                                context:NULL].size;
+        CGSize buttonSize = CGSizeMake(permissionStringSize.width + 20, permissionStringSize.height + 10);
         
         CGFloat containerWidth = self.frame.size.width - kContainerPadding * 2;
-        CGFloat containerHeight = infoSize.height + kButtonTopPadding + permissionStringSize.height;
+        CGFloat containerHeight = infoSize.height + kButtonTopPadding + buttonSize.height;
         UIView *container = [[UIView alloc] initWithFrame:CGRectMake(kContainerPadding,
                                                                      size.height / 2 - containerHeight,
                                                                      containerWidth,
                                                                      containerHeight)];
-        
+        container.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;        
         
         UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, infoSize.width, infoSize.height)];
         infoLabel.numberOfLines = 0;
@@ -50,7 +51,6 @@
         self.permissionsButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         self.permissionsButton.titleLabel.font = permissionButtonFont;
         [self.permissionsButton setTitle:permissionButtonText forState:UIControlStateNormal];
-        CGSize buttonSize = CGSizeMake(permissionStringSize.width + 20, permissionStringSize.height + 10);
         self.permissionsButton.frame = CGRectMake((containerWidth - buttonSize.width) / 2,
                                                   infoSize.height + kButtonTopPadding,
                                                   buttonSize.width, buttonSize.height);
