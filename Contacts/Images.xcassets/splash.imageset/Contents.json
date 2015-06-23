@@ -7,11 +7,12 @@
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "splash_image@2x.png"
+      "filename" : "avatar_400x400.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x"
+      "scale" : "3x",
+      "filename" : "avatar_600x600.png"
     }
   ],
   "info" : {
