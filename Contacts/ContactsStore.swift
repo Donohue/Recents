@@ -1,4 +1,4 @@
-import Contacts
+@preconcurrency import AddressBook
 import Foundation
 
 enum ContactsViewState: Equatable {
@@ -14,18 +14,18 @@ private struct ContactSnapshot: Sendable {
     let familyName: String
     let displayName: String
     let phoneNumbers: [PhoneNumber]
+    let creationDate: Date?
 }
 
 private actor ContactsService {
-    private let contactStore = CNContactStore()
-
-    func authorizationStatus() -> CNAuthorizationStatus {
-        CNContactStore.authorizationStatus(for: .contacts)
+    func authorizationStatus() -> ABAuthorizationStatus {
+        ABAddressBookGetAuthorizationStatus()
     }
 
     func requestAccess() async throws -> Bool {
-        try await withCheckedThrowingContinuation { continuation in
-            contactStore.requestAccess(for: .contacts) { granted, error in
+        let addressBook = try makeAddressBook()
+        return try await withCheckedThrowingContinuation { continuation in
+            ABAddressBookRequestAccessWithCompletion(addressBook) { granted, error in
                 if let error {
                     continuation.resume(throwing: error)
                 } else {
@@ -36,61 +36,106 @@ private actor ContactsService {
     }
 
     func fetchContacts() throws -> [ContactSnapshot] {
-        let keys: [CNKeyDescriptor] = [
-            CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
-            CNContactPhoneNumbersKey as CNKeyDescriptor
-        ]
-        let request = CNContactFetchRequest(keysToFetch: keys)
-        request.sortOrder = .userDefault
-
-        var contacts: [ContactSnapshot] = []
-        try contactStore.enumerateContacts(with: request) { contact, _ in
-            let phoneNumbers = contact.phoneNumbers.map { labeledValue in
-                PhoneNumber(
-                    label: CNLabeledValue<NSString>.localizedString(forLabel: labeledValue.label ?? CNLabelPhoneNumberMain),
-                    value: labeledValue.value.stringValue
-                )
-            }
-
-            guard !phoneNumbers.isEmpty else { return }
-
-            let formattedName = CNContactFormatter.string(from: contact, style: .fullName)
-            let fallbackName = phoneNumbers[0].value
-            let displayName = formattedName.flatMap { $0.isEmpty ? nil : $0 } ?? fallbackName
-            contacts.append(
-                ContactSnapshot(
-                    identifier: contact.identifier,
-                    givenName: contact.givenName,
-                    familyName: contact.familyName,
-                    displayName: displayName,
-                    phoneNumbers: phoneNumbers
-                )
-            )
+        let addressBook = try makeAddressBook()
+        guard let people = ABAddressBookCopyArrayOfAllPeople(addressBook)?.takeRetainedValue() as? [ABRecord] else {
+            return []
         }
 
-        return contacts
+        return people.compactMap { record in
+            let phoneNumbers = phoneNumbers(for: record)
+            guard !phoneNumbers.isEmpty else { return nil }
+
+            let givenName = stringValue(for: record, property: kABPersonFirstNameProperty) ?? ""
+            let familyName = stringValue(for: record, property: kABPersonLastNameProperty) ?? ""
+            let displayName = compositeName(for: record) ?? phoneNumbers[0].value
+
+            return ContactSnapshot(
+                identifier: String(ABRecordGetRecordID(record)),
+                givenName: givenName,
+                familyName: familyName,
+                displayName: displayName,
+                phoneNumbers: phoneNumbers,
+                creationDate: dateValue(for: record, property: kABPersonCreationDateProperty)
+            )
+        }
     }
 
     func deleteContact(identifier: String) throws {
-        let contact = try contactStore.unifiedContact(
-            withIdentifier: identifier,
-            keysToFetch: [CNContactIdentifierKey as CNKeyDescriptor]
-        )
-        guard let mutableContact = contact.mutableCopy() as? CNMutableContact else {
+        guard let recordID = ABRecordID(identifier) else {
             throw ContactsStoreError.couldNotDelete
         }
 
-        let request = CNSaveRequest()
-        request.delete(mutableContact)
-        try contactStore.execute(request)
+        let addressBook = try makeAddressBook()
+        guard let unmanagedPerson = ABAddressBookGetPersonWithRecordID(addressBook, recordID) else {
+            throw ContactsStoreError.couldNotDelete
+        }
+        let person = unmanagedPerson.takeUnretainedValue()
+
+        guard ABAddressBookRemoveRecord(addressBook, person, nil),
+              ABAddressBookSave(addressBook, nil) else {
+            throw ContactsStoreError.couldNotDelete
+        }
+    }
+
+    private func makeAddressBook() throws -> ABAddressBook {
+        guard let addressBook = ABAddressBookCreateWithOptions(nil, nil)?.takeRetainedValue() else {
+            throw ContactsStoreError.couldNotOpenAddressBook
+        }
+        return addressBook
+    }
+
+    private func stringValue(for record: ABRecord, property: ABPropertyID) -> String? {
+        guard let value = ABRecordCopyValue(record, property)?.takeRetainedValue() else { return nil }
+        return value as? String
+    }
+
+    private func dateValue(for record: ABRecord, property: ABPropertyID) -> Date? {
+        guard let value = ABRecordCopyValue(record, property)?.takeRetainedValue() else { return nil }
+        return value as? Date
+    }
+
+    private func compositeName(for record: ABRecord) -> String? {
+        guard let name = ABRecordCopyCompositeName(record)?.takeRetainedValue() as String?, !name.isEmpty else {
+            return nil
+        }
+        return name
+    }
+
+    private func phoneNumbers(for record: ABRecord) -> [PhoneNumber] {
+        guard let value = ABRecordCopyValue(record, kABPersonPhoneProperty)?.takeRetainedValue() else {
+            return []
+        }
+        let phoneNumbers: ABMultiValue = value
+
+        return (0..<ABMultiValueGetCount(phoneNumbers)).compactMap { index in
+            guard let value = ABMultiValueCopyValueAtIndex(phoneNumbers, index)?.takeRetainedValue() as? String else {
+                return nil
+            }
+
+            let label: String
+            if let rawLabel = ABMultiValueCopyLabelAtIndex(phoneNumbers, index)?.takeRetainedValue(),
+               let localizedLabel = ABAddressBookCopyLocalizedLabel(rawLabel)?.takeRetainedValue() {
+                label = localizedLabel as String
+            } else {
+                label = String(localized: "Phone")
+            }
+
+            return PhoneNumber(label: label, value: value)
+        }
     }
 }
 
 private enum ContactsStoreError: LocalizedError {
+    case couldNotOpenAddressBook
     case couldNotDelete
 
     var errorDescription: String? {
-        String(localized: "The contact could not be deleted.")
+        switch self {
+        case .couldNotOpenAddressBook:
+            String(localized: "The contacts database could not be opened.")
+        case .couldNotDelete:
+            String(localized: "The contact could not be deleted.")
+        }
     }
 }
 
@@ -101,7 +146,7 @@ final class ContactsStore: ObservableObject {
 
     private let service = ContactsService()
     private let defaults: UserDefaults
-    private let firstSeenKey = "contactFirstSeenDates"
+    private let fallbackDatesKey = "contactFallbackDates"
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -123,7 +168,7 @@ final class ContactsStore: ObservableObject {
                 status = await service.authorizationStatus()
             }
 
-            guard Self.canReadContacts(status) else {
+            guard status == .authorized else {
                 sections = []
                 state = .permissionDenied
                 return
@@ -140,49 +185,42 @@ final class ContactsStore: ObservableObject {
     func delete(_ contact: RecentContact) async {
         do {
             try await service.deleteContact(identifier: contact.id)
-            removeStoredDate(for: contact.id)
+            removeFallbackDate(for: contact.id)
             await load()
         } catch {
             state = .failed(error.localizedDescription)
         }
     }
 
-    private static func canReadContacts(_ status: CNAuthorizationStatus) -> Bool {
-        if status == .authorized {
-            return true
-        }
-
-        if #available(iOS 18.0, *), status == .limited {
-            return true
-        }
-
-        return false
-    }
-
     private func makeSections(from snapshots: [ContactSnapshot]) -> [ContactsSection] {
         let now = Date()
-        var firstSeenDates = defaults.dictionary(forKey: firstSeenKey) as? [String: TimeInterval] ?? [:]
+        var fallbackDates = defaults.dictionary(forKey: fallbackDatesKey) as? [String: TimeInterval] ?? [:]
         let currentIdentifiers = Set(snapshots.map(\.identifier))
-        firstSeenDates = firstSeenDates.filter { currentIdentifiers.contains($0.key) }
+        fallbackDates = fallbackDates.filter { currentIdentifiers.contains($0.key) }
 
         let contacts = snapshots.map { snapshot in
-            let timestamp = firstSeenDates[snapshot.identifier] ?? now.timeIntervalSince1970
-            firstSeenDates[snapshot.identifier] = timestamp
+            let fallbackTimestamp = fallbackDates[snapshot.identifier] ?? now.timeIntervalSince1970
+            if snapshot.creationDate == nil {
+                fallbackDates[snapshot.identifier] = fallbackTimestamp
+            } else {
+                fallbackDates.removeValue(forKey: snapshot.identifier)
+            }
+
             return RecentContact(
                 id: snapshot.identifier,
                 givenName: snapshot.givenName,
                 familyName: snapshot.familyName,
                 displayName: snapshot.displayName,
                 phoneNumbers: snapshot.phoneNumbers,
-                firstSeenAt: Date(timeIntervalSince1970: timestamp)
+                createdAt: snapshot.creationDate ?? Date(timeIntervalSince1970: fallbackTimestamp)
             )
         }
-        defaults.set(firstSeenDates, forKey: firstSeenKey)
+        defaults.set(fallbackDates, forKey: fallbackDatesKey)
 
         let calendar = Calendar.autoupdatingCurrent
         let grouped = Dictionary(grouping: contacts) { contact in
-            let components = calendar.dateComponents([.year, .month], from: contact.firstSeenAt)
-            return calendar.date(from: components) ?? calendar.startOfDay(for: contact.firstSeenAt)
+            let components = calendar.dateComponents([.year, .month], from: contact.createdAt)
+            return calendar.date(from: components) ?? calendar.startOfDay(for: contact.createdAt)
         }
 
         return grouped
@@ -190,8 +228,8 @@ final class ContactsStore: ObservableObject {
                 ContactsSection(
                     month: month,
                     contacts: contacts.sorted {
-                        if $0.firstSeenAt != $1.firstSeenAt {
-                            return $0.firstSeenAt > $1.firstSeenAt
+                        if $0.createdAt != $1.createdAt {
+                            return $0.createdAt > $1.createdAt
                         }
                         return $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending
                     }
@@ -200,9 +238,9 @@ final class ContactsStore: ObservableObject {
             .sorted { $0.month > $1.month }
     }
 
-    private func removeStoredDate(for identifier: String) {
-        var firstSeenDates = defaults.dictionary(forKey: firstSeenKey) as? [String: TimeInterval] ?? [:]
-        firstSeenDates.removeValue(forKey: identifier)
-        defaults.set(firstSeenDates, forKey: firstSeenKey)
+    private func removeFallbackDate(for identifier: String) {
+        var fallbackDates = defaults.dictionary(forKey: fallbackDatesKey) as? [String: TimeInterval] ?? [:]
+        fallbackDates.removeValue(forKey: identifier)
+        defaults.set(fallbackDates, forKey: fallbackDatesKey)
     }
 }

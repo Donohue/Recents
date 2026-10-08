@@ -31,7 +31,7 @@ struct RecentContact: Identifiable, Hashable, Sendable {
     let familyName: String
     let displayName: String
     let phoneNumbers: [PhoneNumber]
-    let firstSeenAt: Date
+    let createdAt: Date
 
     var primaryPhoneNumber: PhoneNumber? {
         phoneNumbers.first
